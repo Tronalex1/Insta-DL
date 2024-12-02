@@ -1,11 +1,31 @@
 import os
 import sys
 import socket
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template_string
 import instaloader
 import requests
 
 app = Flask(__name__)
+
+# HTML template for the form
+HTML_TEMPLATE = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Reel Downloader</title>
+</head>
+<body>
+    <h1>Instagram Reel Downloader</h1>
+    <form action="/download" method="post">
+        <label for="url">Enter Instagram Reel URL:</label><br><br>
+        <input type="text" id="url" name="url" placeholder="https://www.instagram.com/reel/..." required style="width: 300px;"><br><br>
+        <button type="submit">Download</button>
+    </form>
+</body>
+</html>
+"""
 
 # Function to download the Instagram Reel
 def download_reel(url):
@@ -33,23 +53,15 @@ def download_reel(url):
         return {"status": "error", "message": str(e)}
 
 @app.route("/")
-def hello_world():
-    version = sys.version_info
-    res = (
-        "<h1>Instagram Reel Downloader</h1>"
-        f"<h2>{os.getenv('ENV', 'Development Environment')}</h2></br>"
-        f"Running Python: {version.major}.{version.minor}.{version.micro}<br>"
-        f"Hostname: {socket.gethostname()}"
-    )
-    return res
+def home():
+    return render_template_string(HTML_TEMPLATE)
 
 @app.route("/download", methods=["POST"])
 def download():
-    data = request.json
-    if not data or "url" not in data:
+    url = request.form.get("url")
+    if not url:
         return jsonify({"status": "error", "message": "Invalid input. Provide a URL."}), 400
 
-    url = data["url"]
     result = download_reel(url)
     return jsonify(result)
 
