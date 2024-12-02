@@ -16,28 +16,97 @@ HTML_TEMPLATE = """
     <title>Instagram Reel Downloader</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #007bff;
+        }
+        .btn-block {
+            font-size: 16px;
+            padding: 12px;
+        }
+        .alert {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
+    <div class="container">
         <h1 class="text-center">Instagram Reel Downloader</h1>
-        <form action="/download" method="post">
+        <form id="downloadForm" action="/download" method="post">
             <div class="form-group">
                 <label for="url">Enter Instagram Reel URL:</label>
                 <input type="text" id="url" name="url" class="form-control" placeholder="https://www.instagram.com/reel/..." required>
             </div>
             <button type="submit" class="btn btn-primary btn-block">Download</button>
         </form>
+
+        <div id="responseMessage"></div>
     </div>
 
     <!-- Bootstrap JS, Popper.js, and jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // Handle form submission
+        document.getElementById("downloadForm").onsubmit = function(event) {
+            event.preventDefault();
+            const url = document.getElementById("url").value;
+
+            // Clear previous message
+            document.getElementById("responseMessage").innerHTML = "";
+
+            // Validate URL
+            if (!url) {
+                alert("Please enter a valid Instagram URL.");
+                return;
+            }
+
+            // Submit the URL via POST request
+            fetch("/download", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({ url: url })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    // Clear the input box and show success message
+                    document.getElementById("url").value = "";
+                    document.getElementById("responseMessage").innerHTML = 
+                        `<div class="alert alert-success" role="alert">
+                            ${data.message} <br> <strong>File:</strong> ${data.file}
+                        </div>`;
+                } else {
+                    // Show error message
+                    document.getElementById("responseMessage").innerHTML = 
+                        `<div class="alert alert-danger" role="alert">${data.message}</div>`;
+                }
+            })
+            .catch(error => {
+                document.getElementById("responseMessage").innerHTML = 
+                    `<div class="alert alert-danger" role="alert">An error occurred. Please try again later.</div>`;
+            });
+        };
+    </script>
 </body>
 </html>
 """
-
-
 def download_reel(url):
     L = instaloader.Instaloader()
     shortcode = url.split('/')[-2]
