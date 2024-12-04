@@ -7,7 +7,7 @@ import requests
 
 app = Flask(__name__)
 
-# HTML template with Bootstrap for styling
+# Updated HTML template with enhanced Bootstrap design
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="en">
@@ -17,18 +17,49 @@ HTML_TEMPLATE = """
     <title>Instagram Reel Downloader</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+            background-color: #343a40;
+            color: white;
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center">Instagram Reel Downloader</h1>
-        <form action="/download" method="post">
-            <div class="form-group">
-                <label for="url">Enter Instagram Reel URL:</label>
-                <input type="text" id="url" name="url" class="form-control" placeholder="https://www.instagram.com/reel/..." required>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">Download</button>
-        </form>
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="card p-4">
+            <h1 class="text-center mb-4">Instagram Reel Downloader</h1>
+            <form action="/download" method="post">
+                <div class="form-group">
+                    <label for="url">Enter Instagram Reel URL:</label>
+                    <input type="text" id="url" name="url" class="form-control" placeholder="https://www.instagram.com/reel/..." required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Download</button>
+            </form>
+        </div>
     </div>
+    <footer>
+        <p>&copy; 2024 Instagram Reel Downloader | Made with ❤️ by Tushar</p>
+    </footer>
 
     <!-- Bootstrap JS, Popper.js, and jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
