@@ -2,3 +2,4 @@ flask
 gunicorn
 instaloader
 requests
+yt_dlp
