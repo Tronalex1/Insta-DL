@@ -79,12 +79,15 @@ def download_reel(url):
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
-# Function to download YouTube video using yt-dlp
 def download_ytdl(url):
     try:
+        # Path to the cookies file (make sure to provide the correct path to your cookies.txt)
+        cookies_file = 'cookies.txt'
+
         ydl_opts = {
             'format': 'bestvideo+bestaudio/best',  # Download best quality video & audio
             'outtmpl': '%(id)s.%(ext)s',  # Save with video ID as filename
+            'cookies': cookies_file,  # Pass cookies file for authentication
         }
 
         with ytdl.YoutubeDL(ydl_opts) as ydl:
